@@ -44,19 +44,9 @@ class Predictor(BasePredictor):
             print("🦄 Your custom pony model loaded successfully!")
             
         except Exception as e:
-            print(f"❌ Error loading custom model: {e}")
-            print("Falling back to base SDXL model...")
-            # Fallback to base SDXL if custom model fails
-            self.pipe = StableDiffusionXLPipeline.from_pretrained(
-                "stabilityai/stable-diffusion-xl-base-1.0",
-                torch_dtype=torch.float16,
-                use_safetensors=True,
-                variant="fp16"
-            )
-            
-            if torch.cuda.is_available():
-                self.pipe = self.pipe.to("cuda")
-            print("✅ Base SDXL model loaded as fallback")
+            print(f"❌ CRITICAL ERROR: Failed to load custom model: {e}")
+            print("🚨 CUSTOM MODEL IS REQUIRED - NO FALLBACK TO BASE SDXL!")
+            raise Exception(f"Failed to load custom model: {e}")
 
     def predict(
         self,
